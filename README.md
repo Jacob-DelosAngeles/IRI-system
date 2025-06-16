@@ -1,7 +1,5 @@
 # 📦 International Roughness Index Calculator
-```
-⬆️ (Replace above with your app's name)
-```
+
 
 The objective of the project is to develop a prototype system that estimates the International Roughness Index (IRI) using a smartphone's accelerometer, GPS, and camera.
 
