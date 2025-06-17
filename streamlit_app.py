@@ -19,7 +19,7 @@ uploaded_file = st.file_uploader("Choose a CSV file", type='csv')
 # Tabulate data
 if uploaded_file is not None:
     df = pd.read_csv(uploaded_file)
-    st.write("Raw Data Preview", df.head())
+    st.write("Raw Data Preview", df.head(11))
 
     st.success("File Uploaded and Processed")
 
