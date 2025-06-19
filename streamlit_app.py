@@ -5,7 +5,7 @@ import streamlit as st
 home_page = st.Page(
     page = "pages/overview.py",
     title = "Homepage",
-    icon = "📄"
+    icon = "📄",
 )
 
 iri_calculator = st.Page(
