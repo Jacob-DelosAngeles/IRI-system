@@ -1,27 +1,28 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
 
-st.title('🛣️IRI Calculator')
+# --- PAGE SETUP -----
 
-st.markdown(
-    "<span style = 'font-size: 16px; color:gray;'>"
-    "International Roughness Index (IRI) is a global standard for evaluating road smoothness. "
-    "It measures how much a vehicle bounces at it moves, based on vertical acceleration data."
-    "</span>",
-    unsafe_allow_html=True
-    )
-st.write('Upload CSV sensor data exported from Physics Toolbox Sensor Suite')
+home_page = st.Page(
+    page = "pages/overview.py",
+    title = "Homepage",
+    icon = "📄"
+)
 
-# File upload 
-uploaded_file = st.file_uploader("Choose a CSV file", type='csv')
+iri_calculator = st.Page(
+    page = "pages/calculator.py",
+    title = "IRI Calculator",
+    icon = "🛣️",
+    default = True
+)
 
-# Tabulate data
-if uploaded_file is not None:
-    df = pd.read_csv(uploaded_file)
-    st.write("Raw Data Preview", df.head(11))
+# ------ Navigation with section --------------
 
-    st.success("File Uploaded and Processed")
+pg = st.navigation(
+    {
+        "Home" : [home_page],
+        "Projects" : [iri_calculator]
+    }
+)
 
-    # Input Formula for Calculation of IRI
-
+# -------- Run Navigation -------
+pg.run()
