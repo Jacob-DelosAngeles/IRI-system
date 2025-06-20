@@ -41,6 +41,13 @@ st.markdown("""
         margin: 0.5rem 0;
         text-align: center;
     }
+    
+    .highlight-text{
+        background-color: #FFF3CD;
+        padding: 0.5rem;
+        border-radius: 5px;
+        border-left: 3px solid #FFC107;
+    }
 
 </style>
 """, unsafe_allow_html = True)
@@ -108,5 +115,128 @@ st.markdown("""
         <li><strong>Vehicle Mass</strong> - Sprung and unsprung massed</li>
         <li><strong>Speed Normalization</strong> - Standardized to 80 km/h reference</li>
     </ul>
+</div>
+""", unsafe_allow_html = True)
+
+
+# Data Collection Methods
+st.markdown("<div class='section-header'>Data Collection Methods</div>", unsafe_allow_html = True)
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.markdown("""
+    **📱 Smartphone Sensors**
+    - Accelerometer data collection
+    - Physics Toolbox Sensor Suite
+    - Cost-effective solution
+    - Suitable for preliminary assessments
+    """)
+
+with col2:
+    st.markdown("""
+    **🚗 Vehicle-Mounted Systems**
+    - Professional profilometers
+    - Laser-based measurements
+    - High-precision data
+    - Continuous monitoring
+    """)
+
+with col3:
+    st.markdown("""
+    **🛰️ Remote Sensing**
+    - Satellite imagery analysis
+    - LiDAR technology
+    - Large-scale assessments
+    - Network-level monitoring
+    """)
+
+# Applications section
+st.markdown('<div class="section-header">Applications in Pavement Engineering</div>', unsafe_allow_html = True)
+
+applications = [
+    {
+        "title": "🏗️ Construction Quality Control",
+        "description": """Verify that newly constructed pavement meet smoothness 
+        specifications and contract requirements."""
+    },
+    {
+        "title": "📊 Pavement Management Systems",
+        "description": """Monitor pavement conditions over time
+        and prioritize maintenance and rehabilitation projects"""
+    },
+    {
+        "title": "💰 Economic Analysis",
+        "description": """Quantify user costs related to vehicle
+        operating expenses and ride quality impacts."""
+    },
+    {
+        "title": "🔬 Research and Development",
+        "description": """Evaluate new materials, construction techniques,
+        and maintenance strategies. """
+    },
+    {
+        "title": "🚛 Fleet Management",
+        "description": """Asses route conditions for logistics optimization
+        and vehicle maintenance planning."""
+    },
+    {
+        "title": "🌍 Infrastracture Assessment",
+        "description": """Support decision-making for transportation
+        infrastructure investments and policies"""
+    } 
+]
+
+for i in range(0,len(applications), 2):
+    col1, col2 = st.columns(2)
+
+    with col1:
+        app = applications[i]
+        st.markdown(f"""
+        <div class="info-box">
+            <h4>{app['title']}</h4>
+            <p>{app['description']}</p>
+        </div>
+        """, unsafe_allow_html = True)
+    
+    if i + 1 < len(applications):
+        with col2:
+            app = applications[i+1]
+            st.markdown(f"""
+            <div class="info-box">
+                <h4>{app['title']}</h4>
+                <p>{app['description']}</p>
+            </div>
+            """, unsafe_allow_html = True)
+
+# Getting Started Section
+st.markdown("""<div class='section-header'>Getting Started
+with IRI Calculation</div>""", unsafe_allow_html = True)
+
+st.markdown("""
+<div class="highlight-text">
+    <h4>📋 Data Requirements</h4>
+    <p>To calculate IRI using this application, you'll need:</p>
+    <ul>
+        <li><strong>CSV file</strong> with accelerometer  data
+        from Physics Toolbox Sensor Suite</li>
+        <li><strong>Time-series data</strong> including vertical
+        acceleration measurements</li>
+        <li><strong>Sampling rate</strong> of at least 100 Hz for
+        accurate results</li>
+        <li><strong>Vehicle Speed</strong> information (recommended 50-80 km/hr)</li>
+    </ul>
+    <p><em> Ready to calculate IRI? Navigate to the IRI Calculate page using
+    the sidebar menu.</em></p>
+</div>
+""", unsafe_allow_html = True)
+
+
+# Footer
+st.markdown('---')
+st.markdown("""
+<div style = "text-align:center; color: #666; margin-top: 2rem;">
+    <p><strong>IRI Calculator</strong> - Professional Pavement Engineering Tool</p>
+    <p>Developed for transportation professionals and pavement engineers</p>
 </div>
 """, unsafe_allow_html = True)
