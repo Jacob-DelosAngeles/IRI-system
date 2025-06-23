@@ -159,21 +159,90 @@ if uploaded_file is not None:
                 iri_values, segments = iri_calc.calculate_iri_rms_method(df_processed, segment_length = 50)
 
                 mean_iri = np.mean(iri_values)
-                st.success(f"✅ IRI Calculation Complete: {len(segments)} segments")
-                st.metric("Road IRI (m/km)", f"{mean_iri:.2f}")
-                st.metric("Standard Deviation", f"{np.std(iri_values):.2f}")
-                st.metric("Max IRI", f"{np.max(iri_values):.2f}")
 
-                if mean_iri <= 3:
-                    classification = 'Good'
-                elif mean_iri <= 5:
-                    classification = 'Fair'
-                elif mean_iri <= 7:
-                    classification = 'Poor'
-                else:
-                    classification = 'Bad'
+                # Formatted Results
+                st.markdown('<div class="section-header">🏆 IRI Calculation Results</div>',
+                unsafe_allow_html = True)
+
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.metric("🛣️ IRI Value", f"{mean_iri:.2f}", help="International Roughness Index")
+                with col2:
+                    if mean_iri <= 3:
+                        classification = 'Good'
+                    elif mean_iri <= 5:
+                        classification = 'Fair'
+                    elif mean_iri <= 7:
+                        classification = 'Poor'
+                    else:
+                        classification = 'Bad'
+                    st.metric("⭐ Road Quality", f"{classification}", help="Pavement quality assessment")
+                with col3:
+                    st.metric("📊 Standard Deviation", f"{np.std(iri_values):.2f}", help="IRI spread")
                 
-                st.info(f"🚧 Road Classification: **{classification}**")
+                # Quality Assessment
+                def get_sample_quality_rating(iri_value):
+                    if iri_value <= 3:
+                        return{
+                            'rating': 'Good',
+                            'description': 'Acceptable pavement condition',
+                            'color': '#28a745',
+                            'interpretation': """This pavement provides good ride quality
+                            with acceptable smoothness. Vehicle operating costs are within
+                            normal range and user comfort is satisfactory.""",
+                            'recommendations': """Condition with routine maintenance activities.
+                            Monitor condition annually and apply preventive treatments as needed to maintain
+                            current service level."""
+                        }
+                    elif iri_value <=5:
+                        return{
+                            'rating' : 'Fair',
+                            'description': 'Moderate pavement roughness',
+                            'color': '#ffc107',
+                            'interpretation': """This pavement shows moderate roughness that begins
+                            to affect ride quality. Some increase in vehicle operating costs and minor
+                            user discomfort may be experienced.""",
+                            'recommendations': """Plan for rehabilitation treatments within 3-5 years. Consider
+                            surface treatments or minor structural improvements to prevent further deterioration."""
+                        }
+                    
+                    elif iri_value <= 7:
+                        return{
+                            'rating': 'Poor',
+                            'description': 'Significant pavement deterioration',
+                            'color': '#fd7e14',
+                            'interpretation': """This pavement has significant roughness that
+                            notably impacts ride quality and increases vehicle operating costs. User
+                            comfort is compromised  and maintenance costs are elevated.""",
+                            'recommendations': """Prioritize major rehabilitation or reconstruction within 2-3 years.
+                            Implement interim maintenance to prevent further rapid deterioration and safety issues."""
+                        }
+                    
+                    else:
+                        return{
+                            'rating': 'Bad',
+                            'description': 'Severe pavement distress',
+                            'color': '#dc3545',
+                            'interpretation': """This pavement exhibits severe roughness causing substantial user discomfort, high vehicle operating costs, 
+                            and potential safety concerns. Structural integrity may be compromised.""",
+                            'recommendations': """Immediate major rehabilitation or full reconstruction required. Consider emergency repairs if safety is compromised. Evaluate load restrictions
+                            until permanent repairs are completed."""
+                        }
+
+                
+                quality = get_sample_quality_rating(mean_iri)
+
+                st.markdown(f"""
+                <div class='info-box' style="border-left-color: {quality['color']};">
+                    <h4>🎯 Quality Assessment</h4>
+                    <p><strong>Rating:</strong> {quality['rating']} ({quality['description']})</p>
+                    <p><strong>Interpretation:</strong> {quality['interpretation']}</p>
+                    <p><strong>Recommendations:</strong> {quality['recommendations']}</p>
+                </div>
+                """, unsafe_allow_html=True)
+
+
+
         
                 # Plotting Results
                 fig, ax = plt.subplots()

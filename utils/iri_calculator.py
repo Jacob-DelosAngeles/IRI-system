@@ -142,7 +142,7 @@ class IRICalculator:
             time_diff = np.diff(df['time'])             # gets time difference between consecutive rows
             sampling_rate = 1.0/np.median(time_diff)    # 1 / median interval
 
-        print(f"Estimated sampling rate: {sampling_rate:.2f} Hz")
+            print(f"Estimated sampling rate: {sampling_rate:.2f} Hz")
 
         # Design low-pass filter
         nyquist = sampling_rate / 2                    # max frequency to capture (half of sample rate)
