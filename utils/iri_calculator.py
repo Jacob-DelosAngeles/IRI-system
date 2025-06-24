@@ -80,11 +80,14 @@ class IRICalculator:
         # Sort by time - though naturally it's already sorted
         processed_df = processed_df.sort_values('time').reset_index(drop=True)
 
+        # Add duration
+        duration = processed_df['time'].iloc[-1] - processed_df['time'].iloc[0]
+
         print(f"Processed Data: {len(processed_df)} valid rows")
         print(f"Time range: {processed_df['time'].iloc[0]:.2f}s to {processed_df['time'].iloc[-1]:.2f}s")
-        print(f"Duration: {processed_df['time'].iloc[-1] - processed_df['time'].iloc[0]:.2f} seconds")
+        print(f"Duration: {duration:.2f} seconds")
 
-        return processed_df
+        return processed_df, duration
 
     # Handling inconsistent column names
     def _find_columns(self, df, possible_names):
@@ -224,10 +227,10 @@ class IRICalculator:
         # Calculation of IRI for each segment
         iri_values = []
         for segment in segments:
-            iri = self._calculate_segment_iri(segment)
+            iri, speed = self._calculate_segment_iri(segment)
             iri_values.append(iri)
 
-        return iri_values, segments
+        return iri_values, segments, sampling_rate, speed
 
     #Create Segments of specified length
     def _create_segments(self, distance, vertical_accel, speed, segment_length):
@@ -275,7 +278,7 @@ class IRICalculator:
         else:
             iri = 0 
 
-        return iri
+        return iri, mean_speed
 
     # Plotting the Results
     def plot_results(self, df, iri_values, segments):

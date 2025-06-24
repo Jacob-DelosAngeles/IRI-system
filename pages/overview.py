@@ -92,11 +92,10 @@ with col2:
     st.markdown("""
     <div class = "metric-container">
         <h4>IRI Quality Scale</h4>
-        <p><strong>0-1.5</strong> - Excellent</p>
-        <p><strong>1.5-3.0</strong> - Good</p>
-        <p><strong>3.0-4.5</strong> - Fair</p>
-        <p><strong>4.5-6.0</strong> - Poor</p>
-        <p><strong>6.0+</strong> - Very Poor
+        <p><strong>≤ 3.0</strong> - Good</p>
+        <p><strong>3.1 - 5.0</strong> - Fair</p>
+        <p><strong>5.1 - 7.0</strong> - Poor</p>
+        <p><strong>> 7.0</strong> - Bad</p>
     </div>
     """, unsafe_allow_html = True)
 

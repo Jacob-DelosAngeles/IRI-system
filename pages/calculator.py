@@ -153,10 +153,10 @@ if uploaded_file is not None:
             # Include the Program for calculation
             iri_calc = IRICalculator()
             df = pd.read_csv(uploaded_file)
-            df_processed = iri_calc.preprocess_data(df)
+            df_processed, duration = iri_calc.preprocess_data(df)
 
             if df_processed is not None:
-                iri_values, segments = iri_calc.calculate_iri_rms_method(df_processed, segment_length = 50)
+                iri_values, segments, sampling_rate, speed = iri_calc.calculate_iri_rms_method(df_processed, segment_length = 150)
 
                 mean_iri = np.mean(iri_values)
 
@@ -242,6 +242,24 @@ if uploaded_file is not None:
                 """, unsafe_allow_html=True)
 
 
+                # Statistical Summary
+                st.markdown('<div class="section-header">📊 Statistical Summary', unsafe_allow_html = True)
+
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    st.markdown("**Calculation Parameters:**")
+                    st.write(f"- Data Duration: {duration:.2f} seconds ")
+                    st.write(f"- Sampling Rate: {sampling_rate:.2f} Hz")
+                    st.write(f"- Speed Estimate: {(speed*3.6):.2f} km/h")
+                    st.write(f"- Distance Covered: ")
+                
+                with col2:
+                    st.markdown("**Data Quality Metrics:**")
+                    st.write(f"- Min IRI: ")
+                    st.write(f"- Max IRI: ")
+                    st.write(f"- Standard Deviation: ")
+                    st.write(f"- Road IRI: ")
 
         
                 # Plotting Results
@@ -250,7 +268,7 @@ if uploaded_file is not None:
                 ax.plot(segment_centers, iri_values, 'ro-')
                 ax.set_xlabel("Distance (m)")
                 ax.set_ylabel("IRI (m/km)")
-                ax.set_title("International Roughness Index per Segment")
+                ax.set_title("International Roughness Index per 150 m")
                 ax.grid(True)
                 st.pyplot(fig)
             else:
