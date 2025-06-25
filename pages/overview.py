@@ -49,6 +49,35 @@ st.markdown("""
         border-left: 3px solid #FFC107;
     }
 
+    [data-testid="stSidebar"] {
+        background-image: url("https://github.com/Jacob-DelosAngeles/IRI-system/blob/master/images/sidebar_background.jpg?raw=true");
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+
+    [data-testid="stSidebar"] .css-1wvake5,
+    [data-testid="stSidebar"] .css-16idsys,
+    [data-testid="stSidebar"] .css-10trblm,
+    [data-testid="stSidebar"] .css-1v0mbdj,
+    [data-testid="stSidebar"] .css-1v3fvcr,
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3, 
+    [data-testid="stSidebar"] p, 
+    [data-testid="stSidebar"] span {
+        color: white !important;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    [data-testid="stSidebar"] svg {
+    fill: white !important;
+    }
+
+    [data-testid="stNavSectionHeader"] {
+        color: white;
+    }
+    
 </style>
 """, unsafe_allow_html = True)
 
