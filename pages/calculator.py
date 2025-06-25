@@ -30,8 +30,8 @@ st.markdown("""
     .section-header{
         font-size: 1.5rem;
         font-weight: bold;
-        color: #2E4057
-        margin-top: 2rem;
+        color: #2E4057;
+        margin-top: 32px;
         margin-bottom: 1rem;
         border-bottom: 2px solid #2E4057;
         padding-bottom: 0.5rem;
@@ -272,12 +272,16 @@ if uploaded_file is not None:
                 # Plotting Results
                 st.markdown('<div class="section-header">📈 IRI Data Visualization </div>', unsafe_allow_html = True)
 
-                fig, ax = plt.subplots()
-                ax.plot(segment_centers, iri_values, 'ro-')
-                ax.set_xlabel("Distance (m)")
-                ax.set_ylabel("IRI (m/km)")
-                ax.set_title("International Roughness Index per 150 m")
+                fig, ax = plt.subplots(figsize=(10,4))
+                ax.plot(segment_centers, iri_values, 'ro-', markersize = 4)
+                ax.set_xlabel("Distance (m)", fontsize=10)
+                ax.set_ylabel("IRI (m/km)", fontsize=10)
+                ax.set_title("International Roughness Index per 150 m", fontsize=12)
                 ax.grid(True)
+                ax.tick_params(axis='both', labelsize=8)
+
+                # Showing the Plot
+                plt.tight_layout()
                 st.pyplot(fig)
             else:
                 st.error("❌ Data preprocessing failed")
