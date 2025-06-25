@@ -10,6 +10,17 @@ st.set_page_config(
     initial_sidebar_state = "expanded"
 )
 
+# For Sidebar Background
+page_bg_image = """
+<style>
+    [data-testid="stSidebar"]{
+    background-image: url("https://jacob-delosangeles.github.io/IRI-system/images/sidebar_background.jpg");
+    background-position: center;
+    }
+</style>
+"""
+
+st.markdown(page_bg_image, unsafe_allow_html = True)
 
 # Custom CSS for template
 st.markdown("""
