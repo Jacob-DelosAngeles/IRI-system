@@ -131,7 +131,7 @@ if uploaded_file is not None:
     st.info("""
     **File Analysis Complete:**
     
-    Your CSV file has been successfullt uploaded and is ready for processing.
+    Your CSV file has been successfully uploaded and is ready for processing.
     The IRI Calculation engine will analyze your acclerometer data using the 
     Root Mean Squared(RMS) model methodology to determine pavement roughness.
 
@@ -156,9 +156,18 @@ if uploaded_file is not None:
             df_processed, duration = iri_calc.preprocess_data(df)
 
             if df_processed is not None:
+                
+                # For IRI Calculation
                 iri_values, segments, sampling_rate, speed = iri_calc.calculate_iri_rms_method(df_processed, segment_length = 150)
 
                 mean_iri = np.mean(iri_values)
+
+                # For Total Distance
+                speed_distance = iri_calc.calculate_speed_from_gps(df_processed)
+                if speed_distance is not None:
+                    time_array = df_processed['time'].values
+                    distance_m = np.trapz(speed_distance, time_array)
+
 
                 # Formatted Results
                 st.markdown('<div class="section-header">🏆 IRI Calculation Results</div>',
@@ -243,7 +252,7 @@ if uploaded_file is not None:
 
 
                 # Statistical Summary
-                st.markdown('<div class="section-header">📊 Statistical Summary', unsafe_allow_html = True)
+                st.markdown('<div class="section-header">📊 Statistical Summary</div>', unsafe_allow_html = True)
 
                 col1, col2 = st.columns(2)
                 
@@ -252,17 +261,19 @@ if uploaded_file is not None:
                     st.write(f"- Data Duration: {duration:.2f} seconds ")
                     st.write(f"- Sampling Rate: {sampling_rate:.2f} Hz")
                     st.write(f"- Speed Estimate: {(speed*3.6):.2f} km/h")
-                    st.write(f"- Distance Covered: ")
+                    st.write(f"- Distance Covered: {(distance_m/1000):.2f} km")
                 
                 with col2:
                     st.markdown("**Data Quality Metrics:**")
-                    st.write(f"- Min IRI: ")
-                    st.write(f"- Max IRI: ")
-                    st.write(f"- Standard Deviation: ")
-                    st.write(f"- Road IRI: ")
+                    st.write(f"- Min IRI: {np.min(iri_values):.2f} m/km ")
+                    st.write(f"- Max IRI: {np.max(iri_values):.2f}  m/km")
+                    st.write(f"- Standard Deviation: {np.std(iri_values):.2f} m/km")
+                    st.write(f"- Road IRI: {mean_iri:.2f} m/km")
 
         
                 # Plotting Results
+                st.markdown('<div class="section-header">📈 IRI Data Visualization </div>', unsafe_allow_html = True)
+
                 fig, ax = plt.subplots()
                 segment_centers = [s['distance_start'] + s['length']/2 for s in segments]
                 ax.plot(segment_centers, iri_values, 'ro-')
