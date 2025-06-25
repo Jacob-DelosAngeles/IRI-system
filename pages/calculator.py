@@ -89,10 +89,6 @@ st.markdown("""
         margin: 0px auto;
     }
 
-    [data-testid="stIconEmoji"] {
-        margin-left: 55px;
-    }
-
     [data-testid="stSidebar"] svg {
     fill: white !important;
     }
