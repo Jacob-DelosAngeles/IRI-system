@@ -81,12 +81,33 @@ st.markdown("""
         font-size: 1.1rem;
     }
 
+    [data-testid="stSidebar"] .st-emotion-cache-1rtdyuf {
+        margin: 0px auto;
+    }
+
+    [data-testid="stSidebar"] .st-emotion-cache-2s0is {
+        margin: 0px auto;
+    }
+
+    [data-testid="stIconEmoji"] {
+        margin-left: 55px;
+    }
+
     [data-testid="stSidebar"] svg {
     fill: white !important;
     }
 
     [data-testid="stNavSectionHeader"] {
         color: white;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    [data-testid="stSidebarNavLink"] {
+        margin-top: 20px;
+        margin-bottom: 100px;
+        background-color: black;
+        border: 2px solid wheat;
     }
 
 </style>
