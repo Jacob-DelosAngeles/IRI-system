@@ -163,10 +163,8 @@ if uploaded_file is not None:
                 mean_iri = np.mean(iri_values)
 
                 # For Total Distance
-                speed_distance = iri_calc.calculate_speed_from_gps(df_processed)
-                if speed_distance is not None:
-                    time_array = df_processed['time'].values
-                    distance_m = np.trapz(speed_distance, time_array)
+                segment_centers = [s['distance_start'] + s['length']/2 for s in segments]
+                total_distance = segment_centers[-1] + (segments[-1]['length']/2)
 
 
                 # Formatted Results
@@ -261,7 +259,7 @@ if uploaded_file is not None:
                     st.write(f"- Data Duration: {duration:.2f} seconds ")
                     st.write(f"- Sampling Rate: {sampling_rate:.2f} Hz")
                     st.write(f"- Speed Estimate: {(speed*3.6):.2f} km/h")
-                    st.write(f"- Distance Covered: {(distance_m/1000):.2f} km")
+                    st.write(f"- Distance Covered: {(total_distance/1000):.2f} km")
                 
                 with col2:
                     st.markdown("**Data Quality Metrics:**")
@@ -275,7 +273,6 @@ if uploaded_file is not None:
                 st.markdown('<div class="section-header">📈 IRI Data Visualization </div>', unsafe_allow_html = True)
 
                 fig, ax = plt.subplots()
-                segment_centers = [s['distance_start'] + s['length']/2 for s in segments]
                 ax.plot(segment_centers, iri_values, 'ro-')
                 ax.set_xlabel("Distance (m)")
                 ax.set_ylabel("IRI (m/km)")
