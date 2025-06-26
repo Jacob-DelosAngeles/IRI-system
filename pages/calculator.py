@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
 from utils.iri_calculator import IRICalculator
 
 # Set page config
@@ -205,6 +207,8 @@ if uploaded_file is not None:
             iri_calc = IRICalculator()
             df = pd.read_csv(uploaded_file)
             df_processed, duration = iri_calc.preprocess_data(df)
+            df_filtered, _ = iri_calc.filter_accelerometer_data(df_processed)
+            vertical_accel = iri_calc.extract_vertical_acceleration(df_filtered)
 
             if df_processed is not None:
                 
@@ -323,17 +327,50 @@ if uploaded_file is not None:
                 # Plotting Results
                 st.markdown('<div class="section-header">📈 IRI Data Visualization </div>', unsafe_allow_html = True)
 
-                fig, ax = plt.subplots(figsize=(10,4))
-                ax.plot(segment_centers, iri_values, 'ro-', markersize = 4)
-                ax.set_xlabel("Distance (m)", fontsize=10)
-                ax.set_ylabel("IRI (m/km)", fontsize=10)
-                ax.set_title("International Roughness Index per 150 m", fontsize=12)
-                ax.grid(True)
-                ax.tick_params(axis='both', labelsize=8)
+                # Create Plotly Subplots
+                fig = make_subplots(
+                    rows =3, cols = 1,
+                    shared_xaxes = False,
+                    subplot_titles = (
+                        "Raw Accelerometer Data",
+                        "Filtered Vertical Acceleration",
+                        "International Roughness Index (IRI)"
+                    )
+                )
+
+                # Plot Raw Accelerometer Data
+                fig.add_trace(go.Scattergl(x=df['time'], y=df['ax'], mode='lines', name='X-axis'), row=1, col=1)
+                fig.add_trace(go.Scattergl(x=df['time'], y=df['ay'], mode='lines', name='Y-axis'), row=1, col=1)
+                fig.add_trace(go.Scattergl(x=df['time'], y=df['az'], mode='lines', name='Z-axis'), row=1, col=1)
+
+                # Plot Filtered Vertical Acceleration
+                fig.add_trace(go.Scattergl(x=df_filtered['time'], y=vertical_accel, mode='lines', name='Vertical Accel'), row=2, col=1)
+
+
+                # Plot IRI Values
+                fig.add_trace(go.Scattergl(
+                    x=segment_centers, y=iri_values,
+                    mode = 'lines+markers', name='IRI',
+                    marker = dict(color='red')
+                ), row=3, col=1)
+
+                # Layout Settings
+                fig.update_layout(
+                    height = 900,
+                    showlegend = True
+                )
+
+                fig.update_xaxes(title_text="Time (s)", row=1, col=1)
+                fig.update_xaxes(title_text="Time (s)", row=2, col=1)
+                fig.update_xaxes(title_text="Distance (m)", row=3, col=1)
+                fig.update_yaxes(title_text="Acceleration (m/s²)", row=1, col=1)
+                fig.update_yaxes(title_text="Vertical Accel(m/s²)", row=2, col=1)
+                fig.update_yaxes(title_text="IRI (m/km)", row=3, col=1)
+                
 
                 # Showing the Plot
-                plt.tight_layout()
-                st.pyplot(fig)
+                st.plotly_chart(fig, use_container_width=True)
+
             else:
                 st.error("❌ Data preprocessing failed")
 
