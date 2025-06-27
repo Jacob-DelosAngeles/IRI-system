@@ -331,6 +331,7 @@ if uploaded_file is not None:
                 fig = make_subplots(
                     rows =3, cols = 1,
                     shared_xaxes = False,
+                    vertical_spacing = 0.12,
                     subplot_titles = (
                         "Raw Accelerometer Data",
                         "Filtered Vertical Acceleration",
@@ -339,27 +340,32 @@ if uploaded_file is not None:
                 )
 
                 # Plot Raw Accelerometer Data
-                fig.add_trace(go.Scattergl(x=df['time'], y=df['ax'], mode='lines', name='X-axis'), row=1, col=1)
-                fig.add_trace(go.Scattergl(x=df['time'], y=df['ay'], mode='lines', name='Y-axis'), row=1, col=1)
-                fig.add_trace(go.Scattergl(x=df['time'], y=df['az'], mode='lines', name='Z-axis'), row=1, col=1)
+                fig.add_trace(go.Scattergl(x=df['time'], y=df['ax'], mode='lines', name='X-axis', line=dict(color='blue')), row=1, col=1)
+                fig.add_trace(go.Scattergl(x=df['time'], y=df['ay'], mode='lines', name='Y-axis', line=dict(color='orange')), row=1, col=1)
+                fig.add_trace(go.Scattergl(x=df['time'], y=df['az'], mode='lines', name='Z-axis', line=dict(color='green')), row=1, col=1)
 
                 # Plot Filtered Vertical Acceleration
-                fig.add_trace(go.Scattergl(x=df_filtered['time'], y=vertical_accel, mode='lines', name='Vertical Accel'), row=2, col=1)
+                fig.add_trace(go.Scattergl(x=df_filtered['time'], y=vertical_accel, mode='lines', name='Vertical Accel', line=dict(color = '#FFBF00')), row=2, col=1)
 
 
                 # Plot IRI Values
                 fig.add_trace(go.Scattergl(
                     x=segment_centers, y=iri_values,
-                    mode = 'lines+markers', name='IRI',
+                    mode = 'lines+markers', name='IRI', line=dict(color='red'),
                     marker = dict(color='red')
                 ), row=3, col=1)
 
                 # Layout Settings
                 fig.update_layout(
-                    height = 900,
-                    showlegend = True
+                    height = 1000,
+                    showlegend = True,
+                    plot_bgcolor= 'white',
+                    paper_bgcolor='white',
+                    font=dict(color='black', size=12),
+                    margin=dict(t=60, b=40, l=40, r=40),
                 )
 
+                # Adding Axes Titles
                 fig.update_xaxes(title_text="Time (s)", row=1, col=1)
                 fig.update_xaxes(title_text="Time (s)", row=2, col=1)
                 fig.update_xaxes(title_text="Distance (m)", row=3, col=1)
@@ -367,6 +373,29 @@ if uploaded_file is not None:
                 fig.update_yaxes(title_text="Vertical Accel(m/s²)", row=2, col=1)
                 fig.update_yaxes(title_text="IRI (m/km)", row=3, col=1)
                 
+                # Title styling (force black instead of grey)
+                for i in range(1,4):
+                    fig['layout']['annotations'][i-1]['font'] = dict(size=14, color='black')
+
+                # Add black border using shapes
+                fig.update_layout(
+                    shapes=[
+                        # Row 1 (top)
+                        dict(type='rect', xref='paper', yref='paper',
+                        x0=0, x1=1, y0=0.70, y1=1,
+                        line=dict(color="black", width=2)),
+
+                        # Row 2 (middle)
+                        dict(type='rect', xref="paper", yref="paper",
+                        x0=0, x1=1, y0=0.38, y1=0.62,
+                        line=dict(color="black", width=2)),
+
+                        # Row 3 (bottom)
+                        dict(type='rect', xref='paper', yref='paper',
+                        x0=0, x1=1, y0=0, y1=0.25,
+                        line=dict(color="black", width=2)),
+                    ]
+                )
 
                 # Showing the Plot
                 st.plotly_chart(fig, use_container_width=True)
