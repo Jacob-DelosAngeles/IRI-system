@@ -250,7 +250,8 @@ class IRICalculator:
                     'distance_end': end_dist,
                     'vertical_accel': vertical_accel [start_idx: end_idx],
                     'speed' : speed[start_idx:end_idx],
-                    'length' : segment_length
+                    'length' : segment_length,
+                    'center_index': start_idx + (end_idx - start_idx) // 2
                 }
                 segments.append(segment)
 

@@ -4,6 +4,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import plotly.express as px
 from utils.iri_calculator import IRICalculator
 
 # Set page config
@@ -175,6 +176,70 @@ uploaded_file = st.file_uploader(
 )
 
 
+# ----- Functions for Map Visualization -------
+
+def plot_iri_map(df, iri_values, segments):
+    latitudes = []
+    longitudes = []
+    qualities = []
+
+    for iri, seg in zip(iri_values, segments):
+        idx = seg['center_index']
+
+        if 0 <= idx < len(df):
+            lat = df.iloc[idx]['latitude']
+            lon = df.iloc[idx]['longitude']
+            latitudes.append(lat)
+            longitudes.append(lon)
+
+            if iri <= 3:
+                qualities.append("Good")
+            elif iri <= 5:
+                qualities.append("Fair")
+            elif iri <=7:
+                qualities.append("Poor")
+            else:
+                qualities.append("Bad")
+        else:
+            continue
+    
+    map_df = pd.DataFrame({
+        'Latitude': latitudes,
+        'Longitude': longitudes,
+        'IRI': iri_values[:len(latitudes)],
+        'Quality': qualities
+    })
+
+    color_map = {
+        "Good": "#28a745",
+        "Fair": "#ffc107",
+        "Poor": "#fd7e14",
+        "Bad": "#dc3545"
+    }
+
+    fig = px.scatter_mapbox(
+        map_df,
+        lat = "Latitude",
+        lon = "Longitude",
+        color = "Quality",
+        size = "IRI",
+        size_max = 10,
+        color_discrete_map = color_map,
+        hover_name = "IRI",
+        zoom = 14,
+        height = 500
+    )
+
+    fig.update_layout(mapbox_style="carto-positron")
+    fig.update_layout(margin={"r":0, "t":0, "l":0, "b":0}
+    )
+
+    st.markdown('<div class="section-header">🗺️ IRI Map Visualization</div>', unsafe_allow_html = True)
+    st.plotly_chart(fig, use_container_width = True)
+
+    
+
+
 # Variables Initialization
 if 'recalculate' not in st.session_state:
     st.session_state.recalculate = False 
@@ -252,7 +317,8 @@ if uploaded_file is not None:
                     'duration': duration,
                     'df': df,
                     'df_filtered': df_filtered,
-                    'vertical_accel': vertical_accel
+                    'vertical_accel': vertical_accel,
+                    'df_processed': df_processed
                 }
                 st.session_state.recalculate = False
             else:
@@ -270,6 +336,7 @@ if uploaded_file is not None:
         df = result['df']
         df_filtered = result['df_filtered']
         vertical_accel = result['vertical_accel']
+        df_processed = result['df_processed']
 
         total_distance = segment_centers[-1] + (segments[-1]['length']/2)
 
@@ -457,6 +524,16 @@ if uploaded_file is not None:
         # Showing the Plot
         st.plotly_chart(fig, use_container_width=True)
 
+
+
+        # Map Visualization 
+        # st.session_state.df_processed = df_processed
+        # st.session_state.iri_values = iri_values
+        # st.session_state.segments = segments
+
+        plot_iri_map(df_processed, iri_values, segments)
+
+
         # Addition of Advanced Settings
         st.markdown('<div class="section-header">⚙️ Advanced Settings</div>',
         unsafe_allow_html = True)
@@ -471,10 +548,6 @@ if uploaded_file is not None:
             st.session_state.threshold_value = new_threshold_value
             st.session_state.recalculate = True
             st.rerun()
-
-
-    
-
 
 else:
     # Upload placeholder
